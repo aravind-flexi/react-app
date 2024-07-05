@@ -1,25 +1,36 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import SearchBar from './components/SearchBar';
+import WeatherDisplay from './components/WeatherDisplay';
+import  getWeatherData  from './components/WeatherService';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [weatherData, setWeatherData] = useState(null);
+  const [unit, setUnit] = useState('C');
+  const [error, setError] = useState('');
+
+  const handleSearch = async (query) => {
+    try {
+      const data = await getWeatherData(query);
+      setWeatherData(data);
+      setError('');
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const handleUnitToggle = () => {
+    setUnit(unit === 'C' ? 'F' : 'C');
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <SearchBar onSearch={handleSearch} />
+      {error && <p className="error">{error}</p>}
+      <WeatherDisplay weatherData={weatherData} unit={unit} onUnitToggle={handleUnitToggle} />
     </div>
   );
-}
+};
 
 export default App;
+
