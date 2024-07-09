@@ -10,9 +10,9 @@ test('calls onSearch with input value on search button click', () => {
   const onSearch = jest.fn();
   render(<SearchBar onSearch={onSearch} />);
   const input = screen.getByPlaceholderText(/Enter city or zip code/i);
-  fireEvent.change(input, { target: { value: 'New York' } });
+  fireEvent.change(input, { target: { value: 'London' } });
   fireEvent.click(screen.getByText(/search/i));
-  expect(onSearch).toHaveBeenCalledWith('New York');
+  expect(onSearch).toHaveBeenCalledWith('London');
 });
 
 test('calls onSearch with coordinates on geolocation button click', () => {
