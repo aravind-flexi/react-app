@@ -8,7 +8,7 @@
   background-position: center;
   transition: background 0.5s ease;
   text-align: center;
-  background-image:url(/public/bgimage.jpg);
+  background-image:url(./components/bgimage.jpg);
 
   @media (max-width: 768px) {
     padding: 10px;
@@ -35,9 +35,9 @@
 
 .weather-card {
   border: 1px solid lightblue;
-  padding: 20px;
+  padding: 100px;
   border-radius: 10px;
-  display: inline-block;
+  display: inline-flexbox;
   margin-top: 20px;
   display: flex;
   margin-bottom: 20px;
@@ -47,26 +47,24 @@
   }
 }
 
-.weather-card img {
-  width: 100px;
-}
+
 
 .App.sunny {
-  background-image:url(/public/sunny.jpg);
+  background-image:url(./components/sunny.jpg);
   background-position: center;
   background-repeat: no-repeat;
   background-size:cover;
 } 
 
 .App.cloudy {
-  background-image: url(/public/cloudy.jpg);
+  background-image: url(./components/cloudy.jpg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 }
 
 .App.rainy {
-  background-image: url(/public/rainy.jpg);
+  background-image: url(./components/rainy.jpg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
