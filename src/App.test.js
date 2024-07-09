@@ -3,7 +3,7 @@ import SearchBar from './components/SearchBar';
 import WeatherDisplay from './components/WeatherDisplay';
 import  getWeatherData  from './components/WeatherService';
 import axios from 'axios';
-
+import App from './App';
 
 test('renders search bar', () => {
   render(<SearchBar onSearch={jest.fn()} />);
