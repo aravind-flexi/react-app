@@ -34,13 +34,15 @@
 }
 
 .weather-card {
-  border: 1px solid lightblue;
+  border: 2px black;
   padding: 100px;
   border-radius: 10px;
-  display: inline-flexbox;
+  display: inline-block;
   margin-top: 20px;
   display: flex;
   margin-bottom: 20px;
+  text-align: center;
+  color: black;
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -49,21 +51,21 @@
 
 
 
-.App.sunny {
+.weather-card.sunny {
   background-image:url(./components/sunny.jpg);
   background-position: center;
   background-repeat: no-repeat;
   background-size:cover;
 } 
 
-.App.cloudy {
+.weather-card.cloudy {
   background-image: url(./components/cloudy.jpg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 }
 
-.App.rainy {
+.weather-card.rainy {
   background-image: url(./components/rainy.jpg);
   background-position: center;
   background-repeat: no-repeat;
@@ -71,5 +73,5 @@
 }
 
 button {
-  margin: 5px;
+  margin: 10px;
 }

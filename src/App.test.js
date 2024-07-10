@@ -1,7 +1,12 @@
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react';
-import App from './App';
+import SearchBar from './components/SearchBar';
+import WeatherDisplay from './components/WeatherDisplay';
 import getWeatherData from './components/WeatherService';
+import axios from 'axios'
+import App from './App';
+import {jest} from '@jest/globals';
+import * as ServiceMock from './components/WeatherService';
 
 test('renders search bar', () => {
   render(<SearchBar onSearch={jest.fn()} />);
@@ -49,21 +54,21 @@ const mockWeatherData = {
     expect(onUnitToggle).toHaveBeenCalled();
   });
 
-  jest.mock('getWeatherData');
+  jest.mock('./components/WeatherService');
 
 test('fetches weather data by city', async () => {
-  getWeatherData.get.mockResolvedValue({ data: { name: 'New York' } });
-  const data = await getWeatherData('New York');
+  ServiceMock.getWeatherData= jest.fn().mockResolvedValue({ data: { name: 'New York' } });
+  const data = await ServiceMock.getWeatherData('New York');
   expect(data.name).toBe('New York');
 });
 
 test('fetches weather data by coordinates', async () => {
-  getWeatherData.get.mockResolvedValue({ data: { name: 'London' } });
-  const data = await getWeatherData('51.5074,-0.1278');
+  ServiceMock.getWeatherData= jest.fn().mockResolvedValue({ data: { name: 'London' } });
+  const data = await ServiceMock.getWeatherData('51.5074,-0.1278');
   expect(data.name).toBe('London');
 });
 
 test('throws error if unable to fetch data', async () => {
-  getWeatherData.get.mockRejectedValue(new Error('Unable to fetch weather data'));
-  await expect(getWeatherData('Unknown')).rejects.toThrow('Unable to fetch weather data');
+  ServiceMock.getWeatherData=jest.fn().mockRejectedValue(new Error('Unable to fetch weather data'));
+  await expect(ServiceMock.getWeatherData('Unknown')).rejects.toThrow('Unable to fetch weather data');
 });
