@@ -9,13 +9,13 @@ import {jest} from '@jest/globals';
 import * as ServiceMock from './components/WeatherService';
 
 test('renders search bar', () => {
-  render(<SearchBar onSearch={jest.fn()} />);
+  render(<App onSearch={jest.fn()} />);
   expect(screen.getByPlaceholderText(/Enter city or zip code/i)).toBeInTheDocument();
 });
 
 test('calls onSearch with input value on search button click', () => {
   const onSearch = jest.fn();
-  render(<SearchBar onSearch={onSearch} />);
+  render(<App onSearch={onSearch} />);
   const input = screen.getByPlaceholderText(/Enter city or zip code/i);
   fireEvent.change(input, { target: { value: 'London' } });
   fireEvent.click(screen.getByText(/search/i));
@@ -29,7 +29,7 @@ test('calls onSearch with coordinates on geolocation button click', () => {
     )
   };
   const onSearch = jest.fn();
-  render(<SearchBar onSearch={onSearch} />);
+  render(<App onSearch={onSearch} />);
   fireEvent.click(screen.getByText(/Use My Location/i));
   expect(onSearch).toHaveBeenCalledWith('50,50');
 });
@@ -41,7 +41,7 @@ const mockWeatherData = {
   };
   
   test('renders weather display with data', () => {
-    render(<WeatherDisplay weatherData={mockWeatherData} unit="C" onUnitToggle={jest.fn()} />);
+    render(<App weatherData={mockWeatherData} unit="C" onUnitToggle={jest.fn()} />);
     expect(screen.getByText(/new york/i)).toBeInTheDocument();
     expect(screen.getByText(/clear sky/i)).toBeInTheDocument();
     expect(screen.getByText(/20.00 °C/i)).toBeInTheDocument();
@@ -49,7 +49,7 @@ const mockWeatherData = {
   
   test('toggles units on button click', () => {
     const onUnitToggle = jest.fn();
-    render(<WeatherDisplay weatherData={mockWeatherData} unit="C" onUnitToggle={onUnitToggle} />);
+    render(<App weatherData={mockWeatherData} unit="C" onUnitToggle={onUnitToggle} />);
     fireEvent.click(screen.getByText(/toggle to °f/i));
     expect(onUnitToggle).toHaveBeenCalled();
   });
