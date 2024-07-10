@@ -1,74 +1,79 @@
-import React from 'react'
-import { render, screen, fireEvent } from '@testing-library/react';
-import SearchBar from './components/SearchBar';
-import WeatherDisplay from './components/WeatherDisplay';
-import getWeatherData from './components/WeatherService';
-import axios from 'axios'
+// src/App.test.js
+import React from 'react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import App from './App';
-import {jest} from '@jest/globals';
-import * as ServiceMock from './components/WeatherService';
+import * as api from './components/WeatherService';
 
-test('renders search bar', () => {
-  render(<App onSearch={jest.fn()} />);
-  expect(screen.getByPlaceholderText(/Enter city or zip code/i)).toBeInTheDocument();
-});
+jest.mock('./components/WeatherService');
 
-test('calls onSearch with input value on search button click', () => {
-  const onSearch = jest.fn();
-  render(<App onSearch={onSearch} />);
-  const input = screen.getByPlaceholderText(/Enter city or zip code/i);
-  fireEvent.change(input, { target: { value: 'London' } });
-  fireEvent.click(screen.getByText(/search/i));
-  expect(onSearch).toHaveBeenCalledWith('London');
-});
+describe('Weather App', () => {
+    test('renders input and buttons', () => {
+        render(<App />);
+        expect(screen.getByPlaceholderText(/Enter city or zip code/i)).toBeInTheDocument();
+        expect(screen.getByText(/Search/i)).toBeInTheDocument();
+        expect(screen.getByText(/Use My Location/i)).toBeInTheDocument();
+    });
 
-test('calls onSearch with coordinates on geolocation button click', () => {
-  global.navigator.geolocation = {
-    getCurrentPosition: jest.fn().mockImplementationOnce((success) => 
-      success({ coords: { latitude: 50, longitude: 50 } })
-    )
-  };
-  const onSearch = jest.fn();
-  render(<App onSearch={onSearch} />);
-  fireEvent.click(screen.getByText(/Use My Location/i));
-  expect(onSearch).toHaveBeenCalledWith('50,50');
-});
+    test('handles city search', async () => {
+        api.getWeatherData=jest.fn().mockResolvedValueOnce({
+            name: 'London',
+            main: { temp: 15 },
+            weather: [{ description: 'clear sky' }]
+        });
 
-const mockWeatherData = {
-    main: { temp: 20 },
-    weather: [{ main: 'Sunny', description: 'clear sky' }],
-    name: 'New York'
-  };
-  
-  test('renders weather display with data', () => {
-    render(<App weatherData={mockWeatherData} unit="C" onUnitToggle={jest.fn()} />);
-    expect(screen.getByText(/new york/i)).toBeInTheDocument();
-    expect(screen.getByText(/clear sky/i)).toBeInTheDocument();
-    expect(screen.getByText(/20.00 °C/i)).toBeInTheDocument();
-  });
-  
-  test('toggles units on button click', () => {
-    const onUnitToggle = jest.fn();
-    render(<App weatherData={mockWeatherData} unit="C" onUnitToggle={onUnitToggle} />);
-    fireEvent.click(screen.getByText(/toggle to °f/i));
-    expect(onUnitToggle).toHaveBeenCalled();
-  });
+        render(<App />);
+        fireEvent.change(screen.getByPlaceholderText(/Enter city or zip code/i), { target: { value: 'London' } });
+        fireEvent.click(screen.getByText(/Search/i));
 
-  jest.mock('./components/WeatherService');
+        await waitFor(() => expect(screen.getByText(/London/i)).toBeInTheDocument());
+        expect(screen.getByText(/15 °C/i)).toBeInTheDocument();
+    });
 
-test('fetches weather data by city', async () => {
-  ServiceMock.getWeatherData= jest.fn().mockResolvedValue({ data: { name: 'New York' } });
-  const data = await ServiceMock.getWeatherData('New York');
-  expect(data.name).toBe('New York');
-});
+    test('handles geo-location search', async () => {
+        api.getCurrentPosition.mockResolvedValueOnce({
+            name: 'London',
+            main: { temp: 15 },
+            weather: [{ description: 'clear sky' }]
+        });
 
-test('fetches weather data by coordinates', async () => {
-  ServiceMock.getWeatherData= jest.fn().mockResolvedValue({ data: { name: 'London' } });
-  const data = await ServiceMock.getWeatherData('51.5074,-0.1278');
-  expect(data.name).toBe('London');
-});
+        global.navigator.geolocation = {
+            getCurrentPosition: jest.fn().mockImplementationOnce((success) =>
+                success({ coords: { latitude: 51.5074, longitude: -0.1278 } })
+            ),
+        };
 
-test('throws error if unable to fetch data', async () => {
-  ServiceMock.getWeatherData=jest.fn().mockRejectedValue(new Error('Unable to fetch weather data'));
-  await expect(ServiceMock.getWeatherData('Unknown')).rejects.toThrow('Unable to fetch weather data');
+        render(<App />);
+        fireEvent.click(screen.getByText(/Use My Location/i));
+
+        await waitFor(() => expect(screen.getByText(/London/i)).toBeInTheDocument());
+        expect(screen.getByText(/15 °C/i)).toBeInTheDocument();
+    });
+
+    test('toggles temperature unit', async () => {
+        api.getWeatherData.mockResolvedValueOnce({
+            name: 'London',
+            main: { temp: 15 },
+            weather: [{ description: 'clear sky' }]
+        });
+
+        render(<App />);
+        fireEvent.change(screen.getByPlaceholderText(/Enter city or zip code/i), { target: { value: 'London' } });
+        fireEvent.click(screen.getByText(/Search/i));
+
+        await waitFor(() => expect(screen.getByText(/London/i)).toBeInTheDocument());
+        expect(screen.getByText(/15 °C/i)).toBeInTheDocument();
+
+        fireEvent.click(screen.getByText(/Toggle to °F/i));
+        expect(screen.getByText(/temperature: 59 °F/i)).toBeInTheDocument();
+    });
+
+    test('handles errors', async () => {
+        api.getWeatherData.mockRejectedValueOnce(new Error('Unable to fetch weather data'));
+
+        render(<App />);
+        fireEvent.change(screen.getByPlaceholderText(/Enter city or zip code/i), { target: { value: 'InvalidCity' } });
+        fireEvent.click(screen.getByText(/Search/i));
+
+        await waitFor(() => expect(screen.getByText(/Unable to fetch weather data/i)).toBeInTheDocument());
+    });
 });
