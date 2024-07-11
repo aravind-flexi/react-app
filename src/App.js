@@ -13,6 +13,7 @@ const App = () => {
     try {
       const data = await getWeatherData(query);
       setWeatherData(data);
+      console.log(data);
       setError('');
     } catch (err) {
       setError(err.message);

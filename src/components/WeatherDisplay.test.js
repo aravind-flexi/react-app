@@ -9,7 +9,7 @@ const mockWeatherData = {
 
 test('renders weather display with data', () => {
   render(<WeatherDisplay weatherData={mockWeatherData} unit="C" onUnitToggle={jest.fn()} />);
-  expect(screen.getByText(/new york/i)).toBeInTheDocument();
+  expect(screen.getByText(/New york/i)).toBeInTheDocument();
   expect(screen.getByText(/clear sky/i)).toBeInTheDocument();
   expect(screen.getByText(/20.00 °C/i)).toBeInTheDocument();
 });
