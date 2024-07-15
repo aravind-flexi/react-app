@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import SearchBar from './components/SearchBar';
 import WeatherDisplay from './components/WeatherDisplay';
-import  getWeatherData  from './components/WeatherService';
+import  {getWeatherData}  from './components/WeatherService';
 import './App.css';
 
 const App = () => {

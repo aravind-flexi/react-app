@@ -50,26 +50,25 @@
 }
 
 
-
 .weather-card.sunny {
   background-image:url(./components/sunny.jpg);
-  background-position: center;
   background-repeat: no-repeat;
   background-size:cover;
+ background-position: center;
 } 
 
 .weather-card.cloudy {
   background-image: url(./components/cloudy.jpg);
-  background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: center;
 }
 
 .weather-card.rainy {
   background-image: url(./components/rainy.jpg);
-  background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+background-position: center;
 }
 
 button {

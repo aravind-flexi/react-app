@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_KEY = 'c7be0ad81e30ed963b62774b7f44dc20';
 
-  const getWeatherData = async (query) => {
+  export const getWeatherData = async (query) => {
   const isCoords = query.includes(',');
   const endpoint = isCoords
     ? `https://api.openweathermap.org/data/2.5/weather?lat=${query.split(',')[0]}&lon=${query.split(',')[1]}&appid=${API_KEY}&units=metric`
@@ -16,4 +16,4 @@ const API_KEY = 'c7be0ad81e30ed963b62774b7f44dc20';
   }
 };
 
-export default getWeatherData;
+

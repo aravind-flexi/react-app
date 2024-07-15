@@ -3,6 +3,7 @@ import sunny from './sunny.jpg';
 import rainy from './rainy.jpg';
 import cloudy from './cloudy.jpg';
 import bgimage from './bgimage.jpg'
+
 const WeatherDisplay = ({ weatherData, unit, onUnitToggle }) => {
   if (!weatherData) return null;
 
@@ -10,21 +11,21 @@ const WeatherDisplay = ({ weatherData, unit, onUnitToggle }) => {
   const temperature = unit === 'C' ? main.temp : (main.temp * 9 / 5) + 32;
   const description = weather[0].description;
 
-  const getBackgroundImage = (temp) => {
-    if (temp > 30) return sunny;
-    if (temp > 20) return cloudy;
-    if (temp > 10) return rainy;
+  const getBackgroundImage = (tempCelsius) => {
+    if (tempCelsius > 30) return sunny;
+    if (tempCelsius > 20) return cloudy;
+    if (tempCelsius > 10) return rainy;
     return bgimage;
   };
-  const backgroundImage = getBackgroundImage(temperature);
+  const backgroundImage = getBackgroundImage(main.temp);
 
   return (
     <div className="weather-card"
     style={{backgroundImage: `url(${backgroundImage})`}}	>
-      <h2>{name}</h2>
-      <p>{description}</p>
-      <p>{temperature.toFixed(2)} °{unit}</p>
-      <button onClick={onUnitToggle}>Toggle to °{unit === 'C' ? 'F' : 'C'}</button>
+      <h2 data-testid='cityname'>{name}</h2>
+      <p data-testid='info'>{description}</p>
+      <p data-testid='temp'>{temperature.toFixed(2)} °{unit}</p>
+      <button data-testid='btn' onClick={onUnitToggle}>Toggle to °{unit === 'C' ? 'F' : 'C'}</button>
     </div>
   );
 };
