@@ -22,11 +22,9 @@
       "/node_modules/(?!axios)"
     ]
   },
-
   "moduleNameMapper": {
-      "^.+\\.(scss)$": "<rootDir>/__mocks__/styleMock.js"
-    },
-    
+    "^.+\\.(scss)$": "<rootDir>/__mocks__/styleMock.js"
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
